@@ -3,8 +3,20 @@ import subprocess
 import os
 import pandas as pd
 import random
+import pyautogui as auto
+from pandasgui import show
+
+    
 def options():
-    option = int(input('1.Manual Input\n2.Auto Generate\n3.Report Summary\n4.Exit\n'))
+    option1 = auto.confirm(text='Select Option', title='Welcome To One Simulator', buttons=['Manual Input', 'Auto Generate','Report Summary','Exit'])
+    if option1 == 'Manual Input':
+        option = 1
+    elif option1 == 'Auto Generate':
+        option = 2
+    elif option1 == 'Report Summary':
+        option = 3
+    else:
+        option = 4
     return option
 # Specify the path to your .bat file
 bat_file_path = r'compile.bat'
@@ -25,20 +37,13 @@ while True:
                 lines = file.readlines()
 
             # Step 2: Prompt the user for the new value for Scenario.endTime
-            new_value_end_time = input("Enter the new value for Scenario.endTime: ")
-
+            new_value_end_time = int(auto.password(text='Enter the new value for Scenario.endTime:', title='', default='', mask=''))
+            
             # Step 3: Get the current date and time
             current_datetime = datetime.datetime.now()
             formatted_datetime = current_datetime.strftime("%Y_%m_%d_%H_%M_%S")
             
-            formatted_router = ''
-            r = int(input('Router:\n1.Epidemic\n2.SprayAndWait\n3.PROPHET\n'))
-            if r == 1:
-                formatted_router = 'EpidemicRouter'
-            elif r == 2:
-                formatted_router = 'SprayAndWaitRouter'
-            elif r == 3:
-                formatted_router = 'ProphetRouter'
+            formatted_router = auto.confirm(text='Select A Router', title='Router', buttons=['EpidemicRouter', 'SprayAndWaitRouter','ProphetRouter'])
 
             # Step 4: Iterate through the lines and update the line containing "Scenario.endTime =" and "Scenario.name = default_scenario"
             modified_lines = []
@@ -72,8 +77,9 @@ while True:
             
         option = options()
     elif option == 2:
-        Router = int(input("1.Randomly generate all routing\n2.Only Epidamic\n3.Only Spray And WaitRouter\n4.ProPhet\n"))
-        LoopNo = int(input("How many loop want to run\n0 for end\n"))
+        Router = auto.confirm(text='Select A Option', title='Router', buttons=['Randomly generate all routing','EpidemicRouter', 'SprayAndWaitRouter','ProphetRouter'])
+        LoopNo = int(auto.password(text='How many loop want to run:', title='Loop no(0 for Exit)', default='', mask=''))
+        
         if LoopNo != 0:
             for i in range(LoopNo):
                 # Step 1: Open the file for reading
@@ -90,7 +96,7 @@ while True:
                     formatted_datetime = current_datetime.strftime("%Y_%m_%d_%H_%M_%S")
                     
                     formatted_router = ''
-                    if( Router == 1):
+                    if( Router == 'Randomly generate all routing'):
                         r = random.randrange(1,4)
                     else:
                         r = Router-1
@@ -100,7 +106,8 @@ while True:
                         formatted_router = 'SprayAndWaitRouter'
                     elif r == 3:
                         formatted_router = 'ProphetRouter'
-                    print(formatted_router)
+                    
+                    print(i,formatted_router)
                     # Step 4: Iterate through the lines and update the line containing "Scenario.endTime =" and "Scenario.name = default_scenario"
                     modified_lines = []
                     for line in lines:
@@ -160,8 +167,10 @@ while True:
             # Extract the column names and values
             column_names = []
             values = []
+            print(lines[0]) 
             column_names.append("FileName")
-            values.append(lines[0])
+            filename = lines[0].split('Message stats for scenario')
+            values.append(filename[1])
             for line in lines:
                 if ':' in line:
                     key, value = line.split(': ')
@@ -170,7 +179,7 @@ while True:
                         value = float(value)
                     except ValueError:
                         if value == 'NaN':
-                            value = float('nan')
+                            value = 0
                     values.append(value)
             
             for i in range(len(column_names)):
@@ -199,6 +208,8 @@ while True:
         avg = sum(RespProbs)/len(RespProbs)
         print("Avarage of response Probability",avg)
         print(df)
+        show(df)
+        auto.alert(text=df, title='JavaTpoint', button='OK')
         option = options()
     elif option == 4:
         break

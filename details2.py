@@ -90,6 +90,8 @@ while True:
 
                     # Step 2: Prompt the user for the new value for Scenario.endTime
                     new_value_end_time = random.randrange(4200, 172800)
+                    if Router == 'ProphetRouter':
+                        new_value_end_time = random.randrange(4200, 50000)
                     print(new_value_end_time)
                     # Step 3: Get the current date and time
                     current_datetime = datetime.datetime.now()
@@ -99,7 +101,12 @@ while True:
                     if( Router == 'Randomly generate all routing'):
                         r = random.randrange(1,4)
                     else:
-                        r = Router-1
+                        if Router == 'EpidemicRouter':
+                            r = 1
+                        elif Router == 'SprayAndWaitRouter':
+                            r = 2
+                        else:
+                            r = 3
                     if r == 1:
                         formatted_router = 'EpidemicRouter'
                     elif r == 2:
@@ -108,6 +115,7 @@ while True:
                         formatted_router = 'ProphetRouter'
                     
                     print(i,formatted_router)
+                    
                     # Step 4: Iterate through the lines and update the line containing "Scenario.endTime =" and "Scenario.name = default_scenario"
                     modified_lines = []
                     for line in lines:
@@ -209,6 +217,7 @@ while True:
         print("Avarage of response Probability",avg)
         print(df)
         show(df)
+        df.to_csv('out.csv') 
         auto.alert(text=df, title='JavaTpoint', button='OK')
         option = options()
     elif option == 4:

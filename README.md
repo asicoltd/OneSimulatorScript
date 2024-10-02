@@ -83,7 +83,7 @@
 <h2 id="file-structure">File Structure</h2>
 <pre>
 <code>
-├── one_simulator_automation.py   # Main script
+├── details2.py   # Main script
 ├── default_settings.txt          # Settings file to be modified by the script
 ├── compile.bat                   # Batch file to compile ONE simulator
 ├── one.bat                       # Batch file to run ONE simulator

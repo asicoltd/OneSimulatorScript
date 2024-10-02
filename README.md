@@ -45,7 +45,7 @@
 <h2 id="usage">Usage</h2>
 <ol>
     <li>Run the Python script to start the automation tool:
-        <pre><code>python one_simulator_automation.py</code></pre>
+        <pre><code>details2.py</code></pre>
     </li>
     <li>A GUI window will pop up with options:
         <ul>
